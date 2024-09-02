@@ -24,10 +24,10 @@ class Contact:
 class AddressBook:
     
     def __init__(self):
-        self.contacts=dict()
+        self.contacts=list()
     
-    def add_Contact(self,userName,contact):
-        self.contacts[userName]=contact
+    def add_Contact(self,contact):
+        self.contacts.append(contact)
              
 def main():
     
@@ -52,3 +52,5 @@ def main():
     
 if __name__=="__main__":
     main()
+    
+    
