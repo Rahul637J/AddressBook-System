@@ -99,7 +99,7 @@ class AddressBook:
         Parameters:
             None:
         Return Type:
-            str: A message indicating that the contact information has been updated.
+            Tuple: All the data of the contact.
         """
             
         for contact in self.contacts:
@@ -168,7 +168,7 @@ def main():
         if option == 4:
             
             firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts()
-            print(f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n")
+            print("-"*50+"\n"+f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n"+"-"*50)
                
         if option == 5:
             print("Program exited!!!")
