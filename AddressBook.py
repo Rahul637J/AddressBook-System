@@ -10,7 +10,7 @@
 
 class Contact:
     
-    def __init__(self,firstName,lastname,address,city,state,zip,phone):
+    def __init__(self,firstName,lastname,address,city,state,zip,phone,email):
         
         self.firstName=firstName
         self.lastName=lastname
@@ -19,6 +19,7 @@ class Contact:
         self.state=state
         self.zip=zip
         self.phone=phone
+        self.email=email
 
 class AddressBook:
     
@@ -33,20 +34,33 @@ def main():
     obj=AddressBook()
 
     print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
-        
-    user_data=[
-            "Enter your First Name: ",
-            "Enter your Last Name: ",
-            "Enter your Address: ",
-            "Enter your City: ",
-            "Enter your State: ",
-            "Enter the Zip code: ",
-            "Enter your phone number: "
-          ]
-
-    user_data=[input(user_input) for user_input in user_data]
     
-    obj.add_Contact(Contact(*user_data))
+    while True:
+        option = int(input("Enter :\n"+
+                           "       1. Add Contact\n"+
+                           "       2. Exit\n"+
+                           "option: "))
+        
+        if option == 1:
+            
+            user_data=[
+                "Enter your First Name: ",
+                "Enter your Last Name: ",
+                "Enter your Address: ",
+                "Enter your City: ",
+                "Enter your State: ",
+                "Enter the Zip code: ",
+                "Enter your phone number: ",
+                "Enter your valid email: "
+                ]
+
+            user_data=[input(user_input) for user_input in user_data]
+            
+            obj.add_Contact(user_data[0],Contact(*user_data))
+
+        if option == 2:
+            print("Program exited!!!")
+            return    
     
 if __name__=="__main__":
     main()
