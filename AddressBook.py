@@ -24,10 +24,22 @@ class Contact:
 class AddressBook:
     
     def __init__(self):
-        self.contacts=dict()
+        self.contacts=list()
     
-    def add_Contact(self,userName,contact):
-        self.contacts[userName]=contact
+    def add_Contact(self,contact):
+        
+        """
+        Description:
+            Adds a new contact to the address book.
+        
+        Parameters:
+            contact (Contact): A contact object containing contact details like name, address, phone, and email.
+        
+        Return Type:
+            None
+        """
+        
+        self.contacts.append(contact)
              
 def main():
     
@@ -56,7 +68,7 @@ def main():
 
             user_data=[input(user_input) for user_input in user_data]
             
-            obj.add_Contact(user_data[0],Contact(*user_data))
+            obj.add_Contact(Contact(*user_data))
 
         if option == 2:
             print("Program exited!!!")
