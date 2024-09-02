@@ -66,12 +66,47 @@ class AddressBook:
                 contact.address = new_values[2] or contact.address
                 contact.city = new_values[3] or contact.city
                 contact.state = new_values[4] or contact.state
-                contact.zip_code = new_values[5] or contact.zip_code
+                contact.zip_code = new_values[5] or contact.zip
                 contact.phone = new_values[6] or contact.phone
                 contact.email = new_values[7] or contact.email
 
             return "User Data Updated!!!"
+        
+    def delete_contact(self,firstName):
             
+        """
+        Description:
+            Delete an existing contact's details in the address book based on the first name provided.
+        Parameters:
+            firstName (str): The first name of the contact to be delete.
+        Return Type:
+            str: A message indicating that the contact information has been updated.
+        """
+            
+        for contact in self.contacts:
+            
+            if firstName == contact.firstName:
+                self.contacts.remove(contact)
+                return firstName+" contact is deleted!!!"
+            
+            return firstName+" not found in 'AddressBook'"
+    
+    def display_all_contacts(self):
+            
+        """
+        Description:
+            Displaying all contact's details in the address book..
+        Parameters:
+            None:
+        Return Type:
+            str: A message indicating that the contact information has been updated.
+        """
+            
+        for contact in self.contacts:
+            
+            return contact.firstName,contact.lastName,contact.address,contact.city,contact.state,contact.zip,contact.phone,contact.email
+            
+                     
 def main():
     
     addressbook_obj=AddressBook()
@@ -82,7 +117,9 @@ def main():
         option = int(input("Enter :\n"+
                            "       1. Add Contact\n"+
                            "       2. Edit Contact\n"+
-                           "       3. Exit\n"+
+                           "       3. Delete Contact\n"+
+                           "       4. Display all contacts\n"+                                     
+                           "       5. Exit\n"+
                            "option: "))
         
         if option == 1:
@@ -123,6 +160,17 @@ def main():
             print(addressbook_obj.edit_contact(userName,new_values))
             
         if option == 3:
+            
+            firstName=input("Enter the contact firstName to delete: ")    
+            
+            print(addressbook_obj.delete_contact(firstName))
+        
+        if option == 4:
+            
+            firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts()
+            print(f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n")
+               
+        if option == 5:
             print("Program exited!!!")
             return    
     
