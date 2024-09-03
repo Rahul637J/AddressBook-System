@@ -123,7 +123,6 @@ def main():
                            "option: "))
         
         if option == 1:
-            
             user_data=[
                 "Enter your First Name: ",
                 "Enter your Last Name: ",
@@ -140,7 +139,6 @@ def main():
             addressbook_obj.add_Contact(Contact(*user_data))
         
         if option == 2:
-            
             userName=input("Enter your 'First name to edit contact': ")
             
             print("Leave the field empty if you don't want to update it.")
@@ -160,7 +158,6 @@ def main():
             print(addressbook_obj.edit_contact(userName,new_values))
             
         if option == 3:
-            
             firstName=input("Enter the contact firstName to delete: ")    
             
             print(addressbook_obj.delete_contact(firstName))
