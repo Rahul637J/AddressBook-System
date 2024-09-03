@@ -10,10 +10,10 @@
 
 class Contact:
     
-    def __init__(self,firstName,lastname,address,city,state,zip,phone,email):
+    def __init__(self,firstName,lastName,address,city,state,zip,phone,email):
         
         self.firstName=firstName
-        self.lastName=lastname
+        self.lastName=lastName
         self.address=address
         self.city=city
         self.state=state
@@ -47,7 +47,13 @@ class AddressBook:
             None
         """
         
+        contacts=self.addressBooks[addressBook_Name]
+        for list_contact in contacts:
+            if contact.firstName == list_contact.firstName and contact.lastName == list_contact.lastName:
+                return f"{contact.firstName +" " +contact.lastName} is already present in contact try with differen AddressBook"    
+        
         self.addressBooks[addressBook_Name].append(contact)
+        return f"{contact.firstName} is added successfully to the {addressBook_Name} AddressBook"
     
     def edit_contact(self, addressBook_name, firstName, new_values):
         
@@ -158,25 +164,22 @@ def main():
             print(addressbook_obj.display_all_addressBooks())
 
             addressbook_name=input("Enter the 'AddressBook' name from above list to add contact: ")
-            
-            if addressbook_name not in addressbook_obj.addressBooks:
-                print("-"*50+"\n"+f"'{addressbook_name}' AddressBook not found!!!"+"\n"+"-"*50)
-            
-            else:                
-                user_data=[
-                    "Enter your First Name: ",
-                    "Enter your Last Name: ",
-                    "Enter your Address: ",
-                    "Enter your City: ",
-                    "Enter your State: ",
-                    "Enter the Zip code: ",
-                    "Enter your phone number: ",
-                    "Enter your valid email: "
-                    ]
 
-                user_data=[input(user_input) for user_input in user_data]
+                          
+            user_data=[
+                "Enter your First Name: ",
+                "Enter your Last Name: ",
+                "Enter your Address: ",
+                "Enter your City: ",
+                "Enter your State: ",
+                "Enter the Zip code: ",
+                "Enter your phone number: ",
+                "Enter your valid email: "
+                ]
 
-                addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))
+            user_data=[input(user_input) for user_input in user_data]
+
+            print("-"*50+"\n"+addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))+"\n"+"-"*50)
         
         if option == 3:
             
@@ -199,7 +202,7 @@ def main():
 
             new_values = [input(prompt) for prompt in prompts]
 
-            print(addressbook_obj.edit_contact(addressbook_name,userName,new_values))
+            print("-"*50+"\n"+addressbook_obj.edit_contact(addressbook_name,userName,new_values)+"\n"+"-"*50)
             
         if option == 4:
             
@@ -208,15 +211,19 @@ def main():
             addressbook_name=input("Enter one of the AddressBook(s) from above list to delete contact: ")
             
             firstName=input("Enter the contact firstName to delete: ")    
-            print(addressbook_obj.delete_contact(addressbook_name,firstName))
+            print("-"*50+"\n"+addressbook_obj.delete_contact(addressbook_name,firstName)+"\n"+"-"*50)
         
         if option == 5:
             
             print(addressbook_obj.display_all_addressBooks())
             addressbook_name=input("Enter one of the AddressBook(s) from above list to find all contacts:")
             
-            firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts(addressbook_name)
-            print("-"*50+"\n"+f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n"+"-"*50)
+            if addressbook_obj.addressBooks[addressbook_name]:
+                firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts(addressbook_name)
+                print("-"*50+"\n"+f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n"+"-"*50)
+            
+            else:
+                print("-"*50+"\n"+f'"{addressbook_name}" AddressBook is empty add contacts first'+"\n"+"-"*50)    
                
         if option == 6:
             print("Program exited!!!")
