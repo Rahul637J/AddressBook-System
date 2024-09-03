@@ -71,13 +71,13 @@ class AddressBook:
                 if firstName != contact.firstName:
                             return f"{firstName} is not present in the AddressBook!!!"
                 
-                contact.lastName = new_values[1] or contact.lastName
-                contact.address = new_values[2] or contact.address
-                contact.city = new_values[3] or contact.city
-                contact.state = new_values[4] or contact.state
-                contact.zip_code = new_values[5] or contact.zip
-                contact.phone = new_values[6] or contact.phone
-                contact.email = new_values[7] or contact.email
+                contact.lastName = new_values[0] or contact.lastName
+                contact.address = new_values[1] or contact.address
+                contact.city = new_values[2] or contact.city
+                contact.state = new_values[3] or contact.state
+                contact.zip_code = new_values[4] or contact.zip
+                contact.phone = new_values[5] or contact.phone
+                contact.email = new_values[6] or contact.email
 
                 return f"{contact.firstName} Data Updated!!!"
                     
@@ -101,6 +101,19 @@ class AddressBook:
 
             self.contacts.remove(contact)
             return firstName+" contact is deleted!!!"
+    
+    def display_all_addressBooks(self):
+            
+        """
+        Description:
+            Displaying all the addressbook..
+        Parameters:
+            None
+        Return Type:
+            str: A message indicating that the contact information has been updated.
+        """    
+        
+        return list(self.addressBooks.keys())
             
     def display_all_contacts(self,addressBook_name):
             
@@ -131,7 +144,7 @@ def main():
                            "       2. Add Contact\n"+
                            "       3. Edit Contact\n"+
                            "       4. Delete Contact\n"+
-                           "       5. Display all contacts\n"+                                     
+                           "       5. Display all contacts in AddressBook\n"+                                     
                            "       6. Exit\n"+
                            "option: "))
         
@@ -142,35 +155,37 @@ def main():
             
         if option == 2:
             
-            addressbook_name=input("Enter the addressname to add contact: ")
+            print(addressbook_obj.display_all_addressBooks())
+
+            addressbook_name=input("Enter the 'AddressBook' name from above list to add contact: ")
             
             if addressbook_name not in addressbook_obj.addressBooks:
-                print("-"*50+"\n"+"Enter the valid addressbook!!!"+"\n"+"-"*50)
+                print("-"*50+"\n"+f"'{addressbook_name}' AddressBook not found!!!"+"\n"+"-"*50)
             
-            user_data=[
-                "Enter your First Name: ",
-                "Enter your Last Name: ",
-                "Enter your Address: ",
-                "Enter your City: ",
-                "Enter your State: ",
-                "Enter the Zip code: ",
-                "Enter your phone number: ",
-                "Enter your valid email: "
-                ]
-            
-            user_data=[input(user_input) for user_input in user_data]
-            
-            addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))
+            else:                
+                user_data=[
+                    "Enter your First Name: ",
+                    "Enter your Last Name: ",
+                    "Enter your Address: ",
+                    "Enter your City: ",
+                    "Enter your State: ",
+                    "Enter the Zip code: ",
+                    "Enter your phone number: ",
+                    "Enter your valid email: "
+                    ]
+
+                user_data=[input(user_input) for user_input in user_data]
+
+                addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))
         
         if option == 3:
             
-            addressbook_name=input("Enter the addressname to add contact: ")
+            print(addressbook_obj.display_all_addressBooks())
             
-            if addressbook_name not in addressbook_obj.addressBooks:
-                print("-"*50+"\n"+"Enter the valid addressbook!!!"+"\n"+"-"*50)
-            
+            addressbook_name=input("Enter the AddressBook name from the above list to edit contact: ")
+
             userName=input("Enter your 'First name to edit contact': ")
-            
+                
             print("Leave the field empty if you don't want to update it.")
             prompts = [
                 "Enter new Last Name: ",
@@ -187,16 +202,18 @@ def main():
             print(addressbook_obj.edit_contact(addressbook_name,userName,new_values))
             
         if option == 4:
-            firstName=input("Enter the contact firstName to delete: ")    
             
+            print(addressbook_obj.display_all_addressBooks())
+            
+            addressbook_name=input("Enter one of the AddressBook(s) from above list to delete contact: ")
+            
+            firstName=input("Enter the contact firstName to delete: ")    
             print(addressbook_obj.delete_contact(addressbook_name,firstName))
         
         if option == 5:
             
-            addressbook_name=input("Enter the addressname to add contact: ")
-            
-            if addressbook_name not in addressbook_obj.addressBooks:
-                print("-"*50+"\n"+"Enter the valid addressbook!!!"+"\n"+"-"*50)
+            print(addressbook_obj.display_all_addressBooks())
+            addressbook_name=input("Enter one of the AddressBook(s) from above list to find all contacts:")
             
             firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts(addressbook_name)
             print("-"*50+"\n"+f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n"+"-"*50)
