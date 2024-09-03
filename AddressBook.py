@@ -182,7 +182,7 @@ def main():
             addressbook_name=input("Enter the name of the new address book: ")
             print("-"*50+"\n"+addressbook_obj.create_Address_Book(addressbook_name)+"\n"+"-"*50)
             
-        if option == 2:
+        elif option == 2:
             
             print(addressbook_obj.display_all_addressBooks())
 
@@ -204,7 +204,7 @@ def main():
 
             print("-"*50+"\n"+addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))+"\n"+"-"*50)
         
-        if option == 3:
+        elif option == 3:
             
             print(addressbook_obj.display_all_addressBooks())
             
@@ -227,7 +227,7 @@ def main():
 
             print("-"*50+"\n"+addressbook_obj.edit_contact(addressbook_name,userName,new_values)+"\n"+"-"*50)
             
-        if option == 4:
+        elif option == 4:
             
             print(addressbook_obj.display_all_addressBooks())
             
@@ -236,7 +236,7 @@ def main():
             firstName=input("Enter the contact firstName to delete: ")    
             print("-"*50+"\n"+addressbook_obj.delete_contact(addressbook_name,firstName)+"\n"+"-"*50)
         
-        if option == 5:
+        elif option == 5:
             
             print(addressbook_obj.display_all_addressBooks())
             addressbook_name=input("Enter one of the AddressBook(s) from above list to find all contacts:")
@@ -250,7 +250,7 @@ def main():
             else:
                 print("-"*50+"\n"+f'"{addressbook_name}" AddressBook is empty add contacts first'+"\n"+"-"*50)    
         
-        if option == 6:
+        elif option == 6:
             search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
             search_value = input("Enter the value to search: ")
             results = addressbook_obj.search_Person_by_city_or_state(search_option, search_value)
@@ -273,7 +273,7 @@ def main():
             else:
                 print(f"No matching contacts found in {search_value}.")
             
-        if option == 7:
+        elif option == 7:
             print("Program exited!!!")
             return    
     
