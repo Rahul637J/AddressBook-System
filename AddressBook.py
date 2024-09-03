@@ -24,9 +24,17 @@ class Contact:
 class AddressBook:
     
     def __init__(self):
-        self.contacts=list()
+        self.addressBooks={}
     
-    def add_Contact(self,contact):
+    def create_Address_Book(self,addressBook_name):
+        
+        if addressBook_name not in self.addressBooks:
+            self.addressBooks[addressBook_name]=[]
+            return f"{addressBook_name} is added successfull!!!"
+        
+        return f"{addressBook_name} is already exist add new!!!"
+    
+    def add_Contact(self,addressBook_Name,contact):
         
         """
         Description:
@@ -39,9 +47,9 @@ class AddressBook:
             None
         """
         
-        self.contacts.append(contact)
+        self.addressBooks[addressBook_Name].append(contact)
     
-    def edit_contact(self,firstName,new_values):
+    def edit_contact(self, addressBook_name, firstName, new_values):
         
         """
         Description:
@@ -57,11 +65,12 @@ class AddressBook:
             str: A message indicating that the contact information has been updated.
         """
         
-        for contact in self.contacts:
-            
-            if firstName == contact.firstName:
+        contacts = self.addressBooks[addressBook_name]
+        
+        for contact in contacts: 
+                if firstName != contact.firstName:
+                            return f"{firstName} is not present in the AddressBook!!!"
                 
-                contact.firstName = new_values[0] or contact.firstName
                 contact.lastName = new_values[1] or contact.lastName
                 contact.address = new_values[2] or contact.address
                 contact.city = new_values[3] or contact.city
@@ -70,9 +79,9 @@ class AddressBook:
                 contact.phone = new_values[6] or contact.phone
                 contact.email = new_values[7] or contact.email
 
-            return "User Data Updated!!!"
-        
-    def delete_contact(self,firstName):
+                return f"{contact.firstName} Data Updated!!!"
+                    
+    def delete_contact(self,addressBook_name,firstName):
             
         """
         Description:
@@ -82,16 +91,18 @@ class AddressBook:
         Return Type:
             str: A message indicating that the contact information has been updated.
         """
+        
+        contacts = self.addressBooks[addressBook_name]
             
-        for contact in self.contacts:
+        for contact in contacts:
             
-            if firstName == contact.firstName:
-                self.contacts.remove(contact)
-                return firstName+" contact is deleted!!!"
+            if firstName != contact.firstName:
+                return firstName+" not found in 'AddressBook'"
+
+            self.contacts.remove(contact)
+            return firstName+" contact is deleted!!!"
             
-            return firstName+" not found in 'AddressBook'"
-    
-    def display_all_contacts(self):
+    def display_all_contacts(self,addressBook_name):
             
         """
         Description:
@@ -101,12 +112,13 @@ class AddressBook:
         Return Type:
             Tuple: All the data of the contact.
         """
+        
+        contacts = self.addressBooks[addressBook_name]    
             
-        for contact in self.contacts:
+        for contact in contacts:
             
             return contact.firstName,contact.lastName,contact.address,contact.city,contact.state,contact.zip,contact.phone,contact.email
-            
-                     
+                
 def main():
     
     addressbook_obj=AddressBook()
@@ -115,14 +127,26 @@ def main():
     
     while True:
         option = int(input("Enter :\n"+
-                           "       1. Add Contact\n"+
-                           "       2. Edit Contact\n"+
-                           "       3. Delete Contact\n"+
-                           "       4. Display all contacts\n"+                                     
-                           "       5. Exit\n"+
+                           "       1. Add new AddressBook\n"+
+                           "       2. Add Contact\n"+
+                           "       3. Edit Contact\n"+
+                           "       4. Delete Contact\n"+
+                           "       5. Display all contacts\n"+                                     
+                           "       6. Exit\n"+
                            "option: "))
         
         if option == 1:
+            
+            addressbook_name=input("Enter the name of the new address book: ")
+            print("-"*50+"\n"+addressbook_obj.create_Address_Book(addressbook_name)+"\n"+"-"*50)
+            
+        if option == 2:
+            
+            addressbook_name=input("Enter the addressname to add contact: ")
+            
+            if addressbook_name not in addressbook_obj.addressBooks:
+                print("-"*50+"\n"+"Enter the valid addressbook!!!"+"\n"+"-"*50)
+            
             user_data=[
                 "Enter your First Name: ",
                 "Enter your Last Name: ",
@@ -133,17 +157,22 @@ def main():
                 "Enter your phone number: ",
                 "Enter your valid email: "
                 ]
-
+            
             user_data=[input(user_input) for user_input in user_data]
             
-            addressbook_obj.add_Contact(Contact(*user_data))
+            addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))
         
-        if option == 2:
+        if option == 3:
+            
+            addressbook_name=input("Enter the addressname to add contact: ")
+            
+            if addressbook_name not in addressbook_obj.addressBooks:
+                print("-"*50+"\n"+"Enter the valid addressbook!!!"+"\n"+"-"*50)
+            
             userName=input("Enter your 'First name to edit contact': ")
             
             print("Leave the field empty if you don't want to update it.")
             prompts = [
-                "Enter new First Name: ",
                 "Enter new Last Name: ",
                 "Enter new Address: ",
                 "Enter new City: ",
@@ -155,19 +184,24 @@ def main():
 
             new_values = [input(prompt) for prompt in prompts]
 
-            print(addressbook_obj.edit_contact(userName,new_values))
+            print(addressbook_obj.edit_contact(addressbook_name,userName,new_values))
             
-        if option == 3:
+        if option == 4:
             firstName=input("Enter the contact firstName to delete: ")    
             
-            print(addressbook_obj.delete_contact(firstName))
+            print(addressbook_obj.delete_contact(addressbook_name,firstName))
         
-        if option == 4:
+        if option == 5:
             
-            firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts()
+            addressbook_name=input("Enter the addressname to add contact: ")
+            
+            if addressbook_name not in addressbook_obj.addressBooks:
+                print("-"*50+"\n"+"Enter the valid addressbook!!!"+"\n"+"-"*50)
+            
+            firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts(addressbook_name)
             print("-"*50+"\n"+f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n"+"-"*50)
                
-        if option == 5:
+        if option == 6:
             print("Program exited!!!")
             return    
     
