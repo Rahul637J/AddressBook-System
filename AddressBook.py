@@ -137,6 +137,30 @@ class AddressBook:
         for contact in contacts:
             
             return contact.firstName,contact.lastName,contact.address,contact.city,contact.state,contact.zip,contact.phone,contact.email
+    
+    def search_Person_by_name(self,firstName):
+        
+        """
+        Description:
+            Search the person in all contact's details in the address book..
+        Parameters:
+            firstName: The contact first name to search
+        Return Type:
+            person (dict): All the contact which matches the person name.
+        """
+        
+        person={}
+        
+        for addressBook, contacts in self.addressBooks.items():
+    
+            if addressBook not in person:
+                 person[addressBook] = []
+    
+            for contact in contacts:
+                if firstName == contact.firstName:
+                    person[addressBook].append(contact)
+        
+        return person                  
                 
 def main():
     
@@ -150,8 +174,9 @@ def main():
                            "       2. Add Contact\n"+
                            "       3. Edit Contact\n"+
                            "       4. Delete Contact\n"+
-                           "       5. Display all contacts in AddressBook\n"+                                     
-                           "       6. Exit\n"+
+                           "       5. Display all contacts in AddressBook\n"+
+                           "       6. Search person in all AddressBook\n"+                                     
+                           "       7. Exit\n"+
                            "option: "))
         
         if option == 1:
@@ -224,8 +249,34 @@ def main():
             
             else:
                 print("-"*50+"\n"+f'"{addressbook_name}" AddressBook is empty add contacts first'+"\n"+"-"*50)    
-               
+        
         if option == 6:
+            
+            firstName = input("Enter the first name: ")        
+            
+            persons = addressbook_obj.search_Person_by_name(firstName)
+            
+            if persons:
+                
+                for addressBook, contacts in persons.items():
+                    
+                    if contacts:
+                        print("-" * 50)
+                        print(f"Address Book: {addressBook}")
+                        for contact in contacts:
+                            print(f"First Name: {contact.firstName}")
+                            print(f"Last Name: {contact.lastName}")
+                            print(f"Address: {contact.address}")
+                            print(f"City: {contact.city}")
+                            print(f"State: {contact.state}")
+                            print(f"ZIP: {contact.zip}")
+                            print(f"Phone: {contact.phone}")
+                            print(f"Email: {contact.email}")
+                            print("-" * 50)
+            else:
+                print(f"No contacts found!!!.")
+               
+        if option == 7:
             print("Program exited!!!")
             return    
     
