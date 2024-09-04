@@ -43,25 +43,7 @@ class AddressBook:
              
 def main():
     
-    obj=AddressBook()
-
     print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
-        
-            
-    user_data=[
-        "Enter your First Name: ",
-        "Enter your Last Name: ",
-        "Enter your Address: ",
-        "Enter your City: ",
-        "Enter your State: ",
-        "Enter the Zip code: ",
-        "Enter your phone number: ",
-        "Enter your valid email: "
-        ]
-
-    user_data=[input(user_input) for user_input in user_data]
-    
-    obj.add_Contact(Contact(*user_data))  
     
 if __name__=="__main__":
     main()
