@@ -44,10 +44,11 @@ class AddressBook:
             contact (Contact): A contact object containing contact details like name, address, phone, and email.
         
         Return Type:
-            None
+            str: A message with the first name for contact added.
         """
         
-        contacts=self.addressBooks[addressBook_Name]
+        contacts = self.addressBooks[addressBook_Name]
+        
         for list_contact in contacts:
             if contact.firstName == list_contact.firstName and contact.lastName == list_contact.lastName:
                 return f"{contact.firstName +" " +contact.lastName} is already present in contact try with differen AddressBook"    
@@ -74,19 +75,18 @@ class AddressBook:
         contacts = self.addressBooks[addressBook_name]
         
         for contact in contacts: 
-                if firstName != contact.firstName:
-                            return f"{firstName} is not present in the AddressBook!!!"
+            if firstName != contact.firstName:
+                return f"{firstName} is not present in the AddressBook!!!"
+            
+            contact.lastName = new_values[0] or contact.lastName
+            contact.address = new_values[1] or contact.address
+            contact.city = new_values[2] or contact.city
+            contact.state = new_values[3] or contact.state
+            contact.zip_code = new_values[4] or contact.zip
+            contact.phone = new_values[5] or contact.phone
+            contact.email = new_values[6] or contact.email
+            return f"{contact.firstName} Data Updated!!!"
                 
-                contact.lastName = new_values[0] or contact.lastName
-                contact.address = new_values[1] or contact.address
-                contact.city = new_values[2] or contact.city
-                contact.state = new_values[3] or contact.state
-                contact.zip_code = new_values[4] or contact.zip
-                contact.phone = new_values[5] or contact.phone
-                contact.email = new_values[6] or contact.email
-
-                return f"{contact.firstName} Data Updated!!!"
-                    
     def delete_contact(self,addressBook_name,firstName):
             
         """
@@ -116,7 +116,7 @@ class AddressBook:
         Parameters:
             None
         Return Type:
-            str: A message indicating that the contact information has been updated.
+            list: Return all the addressbook in the list format.
         """    
         
         return list(self.addressBooks.keys())
@@ -134,14 +134,14 @@ class AddressBook:
         
         return self.addressBooks[addressBook_name]    
             
-    
     def search_Person_by_city_or_state(self, search_option, search_value):
         
         """
         Description:
             Search the person in all contact's details in the address book..
         Parameters:
-            firstName: The contact first name to search
+            search_option (int): Int value to search by city or state
+            search_value (str): The input value to search across all the addressbook  
         Return Type:
             person (dict): All the contact which matches the person name.
         """
@@ -158,6 +158,29 @@ class AddressBook:
                     person[addressBook].append(contact)
         
         return person
+    
+    def get_countOf_Person_by_city_or_state(self, search_option, search_value):
+        
+        """
+        Description:
+            Search the person in all contact's details in the address book..
+        Parameters:
+            search_option (int): Int value to search by city or state
+            search_value (str): The input value to search across all the addressbook  
+        Return Type:
+            countOf_contacts (int): Count of the contacts which all matches the input values
+        """
+        
+        countOf_countacts=0
+        
+        for addressBook, contacts in self.addressBooks.items():
+
+            for contact in contacts:
+                if (search_option == 1 and contact.city.lower() == search_value.lower()) or \
+                   (search_option == 2 and contact.state.lower() == search_value.lower()):
+                    countOf_countacts+=1
+    
+        return countOf_countacts
                  
 def main():
     
@@ -172,8 +195,9 @@ def main():
                            "       3. Edit Contact\n"+
                            "       4. Delete Contact\n"+
                            "       5. Display all contacts in AddressBook\n"+
-                           "       6. Search person by city or state\n"+                                     
-                           "       7. Exit\n"+
+                           "       6. Search person by city or state\n"+
+                           "       7. Get Count of contacts by 'City' or 'State'\n"                                     
+                           "       8. Exit\n"+
                            "option: "))
         
         if option == 1:
@@ -254,7 +278,9 @@ def main():
             results = addressbook_obj.search_Person_by_city_or_state(search_option, search_value)
             
             if results:
+                
                 for addressBook, contacts in results.items():
+                    
                     if contacts:
                         print("-"*50)
                         print(f"Address Book: {addressBook}")
@@ -270,8 +296,15 @@ def main():
                         print(f"No matching contacts found in {addressBook}.")
             else:
                 print(f"No matching contacts found in {search_value}.")
-            
+        
         elif option == 7:
+            
+            search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
+            search_value = input("Enter the value to search: ")
+            
+            print("-"*30+"\n"+f"{addressbook_obj.get_countOf_Person_by_city_or_state(search_option, search_value)} contact(s) found"+"\n"+"-"*30)
+                    
+        elif option == 8:
             print("Program exited!!!")
             return    
     
