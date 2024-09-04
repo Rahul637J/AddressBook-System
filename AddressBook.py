@@ -124,7 +124,7 @@ class AddressBook:
         
         return list(self.addressBooks.keys())
             
-    def display_all_contacts(self,addressBook_name):
+    def display_all_contacts(self,addressBook_name,search_option):
             
         """
         Description:
@@ -135,7 +135,14 @@ class AddressBook:
             Tuple: All the data of the contact.
         """
         
-        return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.firstName)
+        if search_option == 1:
+            return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.firstName)
+        
+        elif search_option == 2:
+            return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.city)
+        
+        elif search_option == 3:
+            return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.state)
 
     def search_Person_by_city_or_state(self, search_option, search_value):
         
@@ -262,12 +269,15 @@ def main():
             print("-"*50+"\n"+addressbook_obj.delete_contact(addressbook_name,firstName)+"\n"+"-"*50)
         
         elif option == 5:
+            
+            search_option = int(input("Enter 1 to sort by 'First Name'\nEnter 2 to sort by 'City'\nEnter 3 to sort by 'State'\nOption: "))
+            
             print(addressbook_obj.display_all_addressBooks())
 
             addressbook_name = input("Enter one of the AddressBook(s) from the above list to find all contacts: ")
 
             if addressbook_obj.addressBooks[addressbook_name]:
-                contacts = addressbook_obj.display_all_contacts(addressbook_name)
+                contacts = addressbook_obj.display_all_contacts(addressbook_name,search_option)
 
                 for contact in contacts:
                     print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
