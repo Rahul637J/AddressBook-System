@@ -4,7 +4,7 @@
 @Date: 2024-09-02
 @Last Modified by: Rahul 
 @Last Modified time: 2024-09-02
-@Title: Employee wages - Python program to perform phonebook operation.  
+@Title: Employee wages - Python program to perform addressbook operation.  
 
 '''
 
@@ -73,58 +73,8 @@ class AddressBook:
             return "User Data Updated!!!"
             
 def main():
-    
-    addressbook_obj=AddressBook()
 
     print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
-    
-    while True:
-        option = int(input("Enter :\n"+
-                           "       1. Add Contact\n"+
-                           "       2. Edit Contact\n"+
-                           "       3. Exit\n"+
-                           "option: "))
-        
-        if option == 1:
-            
-            user_data=[
-                "Enter your First Name: ",
-                "Enter your Last Name: ",
-                "Enter your Address: ",
-                "Enter your City: ",
-                "Enter your State: ",
-                "Enter the Zip code: ",
-                "Enter your phone number: ",
-                "Enter your valid email: "
-                ]
-
-            user_data=[input(user_input) for user_input in user_data]
-            
-            addressbook_obj.add_Contact(Contact(*user_data))
-        
-        if option == 2:
-            
-            userName=input("Enter your 'First name to edit contact': ")
-            
-            print("Leave the field empty if you don't want to update it.")
-            prompts = [
-                "Enter new First Name: ",
-                "Enter new Last Name: ",
-                "Enter new Address: ",
-                "Enter new City: ",
-                "Enter new State: ",
-                "Enter new Zip code: ",
-                "Enter new Phone Number: ",
-                "Enter new Email: "
-            ]
-
-            new_values = [input(prompt) for prompt in prompts]
-
-            print(addressbook_obj.edit_contact(userName,new_values))
-            
-        if option == 3:
-            print("Program exited!!!")
-            return    
     
 if __name__=="__main__":
     main()
