@@ -61,14 +61,13 @@ class AddressBook:
             
             if firstName == contact.firstName:
                 
-                contact.firstName = new_values[0] or contact.firstName
-                contact.lastName = new_values[1] or contact.lastName
-                contact.address = new_values[2] or contact.address
-                contact.city = new_values[3] or contact.city
-                contact.state = new_values[4] or contact.state
-                contact.zip_code = new_values[5] or contact.zip
-                contact.phone = new_values[6] or contact.phone
-                contact.email = new_values[7] or contact.email
+                contact.lastName = new_values[0] or contact.lastName
+                contact.address = new_values[1] or contact.address
+                contact.city = new_values[2] or contact.city
+                contact.state = new_values[3] or contact.state
+                contact.zip_code = new_values[4] or contact.zip
+                contact.phone = new_values[5] or contact.phone
+                contact.email = new_values[6] or contact.email
 
             return "User Data Updated!!!"
         
@@ -106,7 +105,6 @@ class AddressBook:
             
             return contact.firstName,contact.lastName,contact.address,contact.city,contact.state,contact.zip,contact.phone,contact.email
             
-                     
 def main():
     
     addressbook_obj=AddressBook()
@@ -145,7 +143,6 @@ def main():
             
             print("Leave the field empty if you don't want to update it.")
             prompts = [
-                "Enter new First Name: ",
                 "Enter new Last Name: ",
                 "Enter new Address: ",
                 "Enter new City: ",
