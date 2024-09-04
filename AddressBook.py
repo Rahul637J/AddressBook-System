@@ -20,6 +20,9 @@ class Contact:
         self.zip=zip
         self.phone=phone
         self.email=email
+    
+    def __str__(self):
+        return f"{self.firstName} {self.lastName}"    
 
 class AddressBook:
     
@@ -132,8 +135,8 @@ class AddressBook:
             Tuple: All the data of the contact.
         """
         
-        return self.addressBooks[addressBook_name]    
-            
+        return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.firstName)
+
     def search_Person_by_city_or_state(self, search_option, search_value):
         
         """
@@ -259,18 +262,18 @@ def main():
             print("-"*50+"\n"+addressbook_obj.delete_contact(addressbook_name,firstName)+"\n"+"-"*50)
         
         elif option == 5:
-            
             print(addressbook_obj.display_all_addressBooks())
-            addressbook_name=input("Enter one of the AddressBook(s) from above list to find all contacts:")
-            
+
+            addressbook_name = input("Enter one of the AddressBook(s) from the above list to find all contacts: ")
+
             if addressbook_obj.addressBooks[addressbook_name]:
-                
-                contacts=addressbook_obj.display_all_contacts(addressbook_name)
+                contacts = addressbook_obj.display_all_contacts(addressbook_name)
+
                 for contact in contacts:
-                  print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
-            
+                    print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
+
             else:
-                print("-"*50+"\n"+f'"{addressbook_name}" AddressBook is empty add contacts first'+"\n"+"-"*50)    
+                print("-" * 50+"\n"+f'"{addressbook_name}" AddressBook is empty, please add contacts first.'+"\n"+"-" * 50)
         
         elif option == 6:
             search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
