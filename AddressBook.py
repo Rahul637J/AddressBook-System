@@ -145,6 +145,12 @@ class AddressBook:
         
         elif search_option == 3:
             return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.state)
+        
+        elif search_option == 4:
+            return self.addressBooks[addressBook_name]
+        
+        else:
+            return None
 
     def search_Person_by_city_or_state(self, search_option, search_value):
         
@@ -201,10 +207,10 @@ class AddressBook:
             To write all the address book data to an external file.
 
         Parameters:
-            None.
+            search_option (int): Option to write in the file 'txt' 'csv' 'json' 
 
         Return Type:
-            None.
+            file_name(str) : The file name which the data were written. 
         """
         
         all_contacts = []
@@ -236,9 +242,13 @@ class AddressBook:
             with open(file_name, 'w') as file:
                 file.write(df) 
                     
-        else:
+        elif search_option == 2:
             file_name = 'address_book_data.csv'
             df.to_csv(file_name, index=False)
+        
+        elif search_option == 3:
+            file_name = 'address_book_data.json'
+            df.to_json(file_name, orient='records', lines=True)    
             
         return file_name    
         
@@ -321,7 +331,7 @@ def main():
         
         elif option == 5:
             
-            search_option = int(input("Enter 1 to sort by 'First Name'\nEnter 2 to sort by 'City'\nEnter 3 to sort by 'State'\nOption: "))
+            search_option = int(input("Enter 1 to sort by 'First Name'\nEnter 2 to sort by 'City'\nEnter 3 to sort by 'State'\nElse enter 4\nOption: "))
             
             print(addressbook_obj.display_all_addressBooks())
 
@@ -329,10 +339,14 @@ def main():
 
             if addressbook_obj.addressBooks[addressbook_name]:
                 contacts = addressbook_obj.display_all_contacts(addressbook_name,search_option)
-
-                for contact in contacts:
-                    print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
-
+                
+                if not contacts:
+                    print("Invalid option!!!")
+                
+                else:
+                    for contact in contacts:
+                        print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
+                    
             else:
                 print("-" * 50+"\n" + f'"{addressbook_name}" AddressBook is empty, please add contacts first.' + "\n"+"-" * 50)
         
@@ -369,12 +383,15 @@ def main():
             print("-"*30+f"\n{addressbook_obj.get_countOf_Person_by_city_or_state(search_option, search_value)} contact(s) found\n"+"-"*30)
         
         elif option == 8:
-            search_option = int(input("Enter 1 to write in 'txt' file\nEnter 2 to write in 'csv' file\nOption: "))
+            search_option = int(input("Enter 1 to write in 'txt' file\nEnter 2 to write in 'csv' file\nEnter 3 to write in 'JSON'\nOption: "))
             print("-"*50 + f"\nThe data has stored in '{addressbook_obj.write_data_in_file(search_option)}' file \n " + "-"*50)
                 
         elif option == 9:
             print("Program exited!!!")
-            return    
+            return
+        
+        else:
+            print("Invalid option enter valid (1 - 9)")    
     
 if __name__=="__main__":
     main()
