@@ -145,6 +145,12 @@ class AddressBook:
         
         elif search_option == 3:
             return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.state)
+        
+        elif search_option == 4:
+            return self.addressBooks[addressBook_name]
+        
+        else:
+            return None
 
     def search_Person_by_city_or_state(self, search_option, search_value):
         
@@ -167,7 +173,7 @@ class AddressBook:
             for contact in contacts:
                 if (search_option == 1 and contact.city.lower() == search_value.lower()) or \
                    (search_option == 2 and contact.state.lower() == search_value.lower()):
-                    person[addressBook].append(contact)
+                    person[addressBook].append(contact)  
         
         return person
     
@@ -321,7 +327,7 @@ def main():
         
         elif option == 5:
             
-            search_option = int(input("Enter 1 to sort by 'First Name'\nEnter 2 to sort by 'City'\nEnter 3 to sort by 'State'\nOption: "))
+            search_option = int(input("Enter 1 to sort by 'First Name'\nEnter 2 to sort by 'City'\nEnter 3 to sort by 'State'\nElse enter 4\nOption: "))
             
             print(addressbook_obj.display_all_addressBooks())
 
@@ -329,9 +335,13 @@ def main():
 
             if addressbook_obj.addressBooks[addressbook_name]:
                 contacts = addressbook_obj.display_all_contacts(addressbook_name,search_option)
-
-                for contact in contacts:
-                    print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
+                
+                if not contacts:
+                    print("Invalid option, Enter valid!!!")
+                    
+                else:
+                    for contact in contacts:
+                        print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
 
             else:
                 print("-" * 50+"\n" + f'"{addressbook_name}" AddressBook is empty, please add contacts first.' + "\n"+"-" * 50)
