@@ -8,6 +8,8 @@
 
 '''
 
+import pandas as pd
+
 class Contact:
     
     def __init__(self,firstName,lastName,address,city,state,zip,phone,email):
@@ -191,7 +193,55 @@ class AddressBook:
                     countOf_countacts+=1
     
         return countOf_countacts
-                 
+    
+    def write_data_in_file(self,search_option):
+        
+        """
+        Description:
+            To write all the address book data to an external file.
+
+        Parameters:
+            None.
+
+        Return Type:
+            None.
+        """
+        
+        all_contacts = []
+    
+        for addressBook, contacts in self.addressBooks.items():
+            for contact in contacts:
+
+                contact_data = {
+                    'Address Book': addressBook,
+                    'First Name': contact.firstName,
+                    'Last Name': contact.lastName,
+                    'Address': contact.address,
+                    'City': contact.city,
+                    'State': contact.state,
+                    'ZIP': contact.zip,
+                    'Phone': contact.phone,
+                    'Email': contact.email
+                }
+                
+                all_contacts.append(contact_data)
+
+        df = pd.DataFrame(all_contacts)
+        file_name=None
+
+        if search_option == 1:
+            
+            file_name = 'address_book_data.txt'
+
+            with open(file_name, 'w') as file:
+                file.write(df) 
+                    
+        else:
+            file_name = 'address_book_data.csv'
+            df.to_csv(file_name, index=False)
+            
+        return file_name    
+        
 def main():
     
     addressbook_obj=AddressBook()
@@ -206,8 +256,9 @@ def main():
                            "       4. Delete Contact\n"+
                            "       5. Display all contacts in AddressBook\n"+
                            "       6. Search person by city or state\n"+
-                           "       7. Get Count of contacts by 'City' or 'State'\n"                                     
-                           "       8. Exit\n"+
+                           "       7. Get Count of contacts by 'City' or 'State'\n"
+                           "       8. Get AddressBook details in the external file\n"                                     
+                           "       9. Exit\n"+
                            "option: "))
         
         if option == 1:
@@ -283,7 +334,7 @@ def main():
                     print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
 
             else:
-                print("-" * 50+"\n"+f'"{addressbook_name}" AddressBook is empty, please add contacts first.'+"\n"+"-" * 50)
+                print("-" * 50+"\n" + f'"{addressbook_name}" AddressBook is empty, please add contacts first.' + "\n"+"-" * 50)
         
         elif option == 6:
             search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
@@ -315,9 +366,13 @@ def main():
             search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
             search_value = input("Enter the value to search: ")
             
-            print("-"*30+"\n"+f"{addressbook_obj.get_countOf_Person_by_city_or_state(search_option, search_value)} contact(s) found"+"\n"+"-"*30)
-                    
+            print("-"*30+f"\n{addressbook_obj.get_countOf_Person_by_city_or_state(search_option, search_value)} contact(s) found\n"+"-"*30)
+        
         elif option == 8:
+            search_option = int(input("Enter 1 to write in 'txt' file\nEnter 2 to write in 'csv' file\nOption: "))
+            print("-"*50 + f"\nThe data has stored in '{addressbook_obj.write_data_in_file(search_option)}' file \n " + "-"*50)
+                
+        elif option == 9:
             print("Program exited!!!")
             return    
     
