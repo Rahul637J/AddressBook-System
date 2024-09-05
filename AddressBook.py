@@ -143,6 +143,9 @@ class AddressBook:
         
         elif search_option == 3:
             return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.state)
+        
+        else:
+            return None
 
     def search_Person_by_city_or_state(self, search_option, search_value):
         
@@ -279,8 +282,12 @@ def main():
             if addressbook_obj.addressBooks[addressbook_name]:
                 contacts = addressbook_obj.display_all_contacts(addressbook_name,search_option)
 
-                for contact in contacts:
-                    print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
+                if not contacts:
+                    print("Invalid input")
+                
+                else:    
+                    for contact in contacts:
+                        print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
 
             else:
                 print("-" * 50+"\n"+f'"{addressbook_name}" AddressBook is empty, please add contacts first.'+"\n"+"-" * 50)
