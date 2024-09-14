@@ -8,7 +8,9 @@
 
 '''
 
-from Mylog import logger_init as log
+from Mylog import logger_init
+
+log = logger_init("UC_2")
 
 class Contact:
     
@@ -41,11 +43,11 @@ class AddressBook:
             None
         """
         
+        log.info("Ability to add contacts in Addressbook")
         self.contacts.append(contact)
              
 def main():
     
-    log("UC_2").info("Ability to add contacts in Addressbook")
     print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
     
 if __name__=="__main__":
