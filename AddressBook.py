@@ -9,7 +9,9 @@
 
 '''
 
-from Mylog import logger_init as log
+from Mylog import logger_init 
+
+log = logger_init("UC_1")
 
 class Contact:
     
@@ -26,7 +28,7 @@ class Contact:
              
 def main():
 
-    log("UC_1").info("Ability to create contact")
+    log.info("Ability to create contact")
     print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
     
 if __name__=="__main__":
