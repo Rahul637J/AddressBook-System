@@ -8,6 +8,8 @@
 
 '''
 
+from Mylog import logger_init as log
+
 class Contact:
     
     def __init__(self,firstName,lastname,address,city,state,zip,phone,email):
@@ -40,6 +42,7 @@ class AddressBook:
         """
         
         self.contacts.append(contact)
+        log("UC_2").info("Contact added in addressbook")
     
     def edit_contact(self,firstName,new_values):
         
@@ -69,7 +72,12 @@ class AddressBook:
                 contact.phone = new_values[5] or contact.phone
                 contact.email = new_values[6] or contact.email
 
-            return "User Data Updated!!!"
+                log("UC_3").info("Contact edited")
+                return "User Data Updated!!!"
+        
+        log("UC_3").info("Contact not found")
+        return "Contact not found!!"
+    
         
     def delete_contact(self,firstName):
             
@@ -86,9 +94,11 @@ class AddressBook:
             
             if firstName == contact.firstName:
                 self.contacts.remove(contact)
+                log("UC_4").info("Contact deleted")
                 return firstName+" contact is deleted!!!"
-            
-            return firstName+" not found in 'AddressBook'"
+        
+        log("UC_4").info("Contact not found!!!")    
+        return firstName+" not found in 'AddressBook'"
     
     def display_all_contacts(self):
             
