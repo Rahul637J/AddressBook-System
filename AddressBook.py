@@ -8,7 +8,9 @@
 
 '''
 
-from Mylog import logger_init as log
+from Mylog import logger_init
+
+log = logger_init("UC_3")
 
 class Contact:
     
@@ -41,6 +43,7 @@ class AddressBook:
             None
         """
         
+        log.info("Contact added in the addressbook")
         self.contacts.append(contact)
     
     def edit_contact(self,firstName,new_values):
@@ -72,7 +75,7 @@ class AddressBook:
                 contact.phone = new_values[6] or contact.phone
                 contact.email = new_values[7] or contact.email
 
-            log("UC_3").info("Ability to edit contact")
+            log.info("Ability to edit contact")
             return "User Data Updated!!!"
             
 def main():
