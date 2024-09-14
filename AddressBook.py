@@ -8,308 +8,248 @@
 
 '''
 
+from Mylog import logger_init
+
+log = logger_init("UC_11")
+
 class Contact:
-    
-    def __init__(self,firstName,lastName,address,city,state,zip,phone,email):
-        
-        self.firstName=firstName
-        self.lastName=lastName
-        self.address=address
-        self.city=city
-        self.state=state
-        self.zip=zip
-        self.phone=phone
-        self.email=email
-    
+    def __init__(self, firstName, lastName, address, city, state, zip, phone, email):
+        self.firstName = firstName
+        self.lastName = lastName
+        self.address = address
+        self.city = city
+        self.state = state
+        self.zip = zip
+        self.phone = phone
+        self.email = email
+
     def __str__(self):
-        return f"{self.firstName} {self.lastName}"    
+        return f"{self.firstName} {self.lastName}"
+
 
 class AddressBook:
-    
     def __init__(self):
-        self.addressBooks={}
-    
-    def create_Address_Book(self,addressBook_name):
-        
+        self.contacts = []
+
+    def add_contact(self, contact):
+        """
+        Adds a contact to the address book, ensuring no duplicates.
+        """
+        for existing_contact in self.contacts:
+            if contact.firstName == existing_contact.firstName and contact.lastName == existing_contact.lastName:
+                log.warning(f"Attempted to add duplicate contact: {contact.firstName} {contact.lastName}")
+                return f"{contact.firstName} {contact.lastName} is already in the address book."
+        self.contacts.append(contact)
+        log.info(f"Contact added: {contact.firstName} {contact.lastName}")
+        return f"{contact.firstName} {contact.lastName} added successfully."
+
+    def edit_contact(self, firstName, new_values):
+        """
+        Edits a contact based on first name and updates fields that have new values.
+        """
+        for contact in self.contacts:
+            if contact.firstName == firstName:
+                log.info(f"Editing contact: {firstName}")
+                contact.lastName = new_values[0] or contact.lastName
+                contact.address = new_values[1] or contact.address
+                contact.city = new_values[2] or contact.city
+                contact.state = new_values[3] or contact.state
+                contact.zip = new_values[4] or contact.zip
+                contact.phone = new_values[5] or contact.phone
+                contact.email = new_values[6] or contact.email
+                log.info(f"Contact updated: {contact.firstName} {contact.lastName}")
+                return f"{contact.firstName}'s details updated."
+        log.warning(f"Contact not found: {firstName}")
+        return f"{firstName} not found."
+
+    def delete_contact(self, firstName):
+        """
+        Deletes a contact based on first name.
+        """
+        for contact in self.contacts:
+            if contact.firstName == firstName:
+                self.contacts.remove(contact)
+                log.info(f"Contact deleted: {firstName}")
+                return f"{firstName}'s contact deleted."
+        log.warning(f"Contact not found: {firstName}")
+        return f"{firstName} not found."
+
+    def display_contacts(self):
+        """
+        Returns a list of all contacts sorted by first name.
+        """
+        log.info("Displaying all contacts.")
+        return sorted(self.contacts, key=lambda contact: contact.firstName)
+
+    def search_by_city_or_state(self, search_option, search_value):
+        """
+        Searches for contacts by city or state.
+        """
+        log.info(f"Searching contacts by {'city' if search_option == 1 else 'state'}: {search_value}")
+        results = [contact for contact in self.contacts if
+                   (search_option == 1 and contact.city.lower() == search_value.lower()) or
+                   (search_option == 2 and contact.state.lower() == search_value.lower())]
+        return results
+
+
+class AddressBookManager:
+    def __init__(self):
+        self.addressBooks = {}
+
+    def create_address_book(self, addressBook_name):
+        """
+        Creates a new address book if it doesn't already exist.
+        """
         if addressBook_name not in self.addressBooks:
-            self.addressBooks[addressBook_name]=[]
-            return f"{addressBook_name} is added successfull!!!"
-        
-        return f"{addressBook_name} is already exist add new!!!"
-    
-    def add_Contact(self,addressBook_Name,contact):
-        
-        """
-        Description:
-            Adds a new contact to the address book.
-        
-        Parameters:
-            contact (Contact): A contact object containing contact details like name, address, phone, and email.
-        
-        Return Type:
-            str: A message with the first name for contact added.
-        """
-        
-        contacts = self.addressBooks[addressBook_Name]
-        
-        for list_contact in contacts:
-            if contact.firstName == list_contact.firstName and contact.lastName == list_contact.lastName:
-                return f"{contact.firstName +" " +contact.lastName} is already present in contact try with differen AddressBook"    
-        
-        self.addressBooks[addressBook_Name].append(contact)
-        return f"{contact.firstName} is added successfully to the {addressBook_Name} AddressBook"
-    
-    def edit_contact(self, addressBook_name, firstName, new_values):
-        
-        """
-        Description:
-            Edits an existing contact's details in the address book based on the first name provided.
-            Only fields with new values are updated, otherwise, existing data remains unchanged.
-        
-        Parameters:
-            firstName (str): The first name of the contact to be edited.
-            new_values (list): A list containing the new values for the contact fields. If no new value is 
-                               provided for a field, the old value is retained.
-        
-        Return Type:
-            str: A message indicating that the contact information has been updated.
-        """
-        
-        contacts = self.addressBooks[addressBook_name]
-        
-        for contact in contacts: 
-            if firstName != contact.firstName:
-                return f"{firstName} is not present in the AddressBook!!!"
-            
-            contact.lastName = new_values[0] or contact.lastName
-            contact.address = new_values[1] or contact.address
-            contact.city = new_values[2] or contact.city
-            contact.state = new_values[3] or contact.state
-            contact.zip_code = new_values[4] or contact.zip
-            contact.phone = new_values[5] or contact.phone
-            contact.email = new_values[6] or contact.email
-            return f"{contact.firstName} Data Updated!!!"
-                
-    def delete_contact(self,addressBook_name,firstName):
-            
-        """
-        Description:
-            Delete an existing contact's details in the address book based on the first name provided.
-        Parameters:
-            firstName (str): The first name of the contact to be delete.
-        Return Type:
-            str: A message indicating that the contact information has been updated.
-        """
-        
-        contacts = self.addressBooks[addressBook_name]
-            
-        for contact in contacts:
-            
-            if firstName != contact.firstName:
-                return firstName+" not found in 'AddressBook'"
+            self.addressBooks[addressBook_name] = AddressBook()
+            log.info(f"Address book created: {addressBook_name}")
+            return f"{addressBook_name} created successfully."
+        log.warning(f"Attempted to create duplicate address book: {addressBook_name}")
+        return f"{addressBook_name} already exists."
 
-            self.contacts.remove(contact)
-            return firstName+" contact is deleted!!!"
-    
-    def display_all_addressBooks(self):
-            
+    def add_contact_to_address_book(self, addressBook_name, contact):
         """
-        Description:
-            Displaying all the addressbook..
-        Parameters:
-            None
-        Return Type:
-            list: Return all the addressbook in the list format.
-        """    
-        
+        Adds a contact to a specific address book.
+        """
+        if addressBook_name in self.addressBooks:
+            log.info(f"Adding contact to {addressBook_name}: {contact.firstName} {contact.lastName}")
+            return self.addressBooks[addressBook_name].add_contact(contact)
+        log.error(f"Address book not found: {addressBook_name}")
+        return f"Address book {addressBook_name} not found."
+
+    def edit_contact_in_address_book(self, addressBook_name, firstName, new_values):
+        """
+        Edits a contact in a specific address book.
+        """
+        if addressBook_name in self.addressBooks:
+            log.info(f"Editing contact in {addressBook_name}: {firstName}")
+            return self.addressBooks[addressBook_name].edit_contact(firstName, new_values)
+        log.error(f"Address book not found: {addressBook_name}")
+        return f"Address book {addressBook_name} not found."
+
+    def delete_contact_in_address_book(self, addressBook_name, firstName):
+        """
+        Deletes a contact from a specific address book.
+        """
+        if addressBook_name in self.addressBooks:
+            log.info(f"Deleting contact in {addressBook_name}: {firstName}")
+            return self.addressBooks[addressBook_name].delete_contact(firstName)
+        log.error(f"Address book not found: {addressBook_name}")
+        return f"Address book {addressBook_name} not found."
+
+    def display_all_address_books(self):
+        """
+        Returns a list of all address books.
+        """
+        log.info("Displaying all address books.")
         return list(self.addressBooks.keys())
-            
-    def display_all_contacts(self,addressBook_name):
-            
-        """
-        Description:
-            Displaying all contact's details in the address book..
-        Parameters:
-            None:
-        Return Type:
-            Tuple: All the data of the contact.
-        """
-        
-        return sorted(self.addressBooks[addressBook_name], key=lambda contact: contact.firstName)
 
-    def search_Person_by_city_or_state(self, search_option, search_value):
-        
+    def display_contacts_in_address_book(self, addressBook_name):
         """
-        Description:
-            Search the person in all contact's details in the address book..
-        Parameters:
-            search_option (int): Int value to search by city or state
-            search_value (str): The input value to search across all the addressbook  
-        Return Type:
-            person (dict): All the contact which matches the person name.
+        Displays all contacts in a specific address book.
         """
-        
-        person = {}
-        
-        for addressBook, contacts in self.addressBooks.items():
-            if addressBook not in person:
-                person[addressBook] = []
+        if addressBook_name in self.addressBooks:
+            log.info(f"Displaying contacts in {addressBook_name}")
+            return self.addressBooks[addressBook_name].display_contacts()
+        log.error(f"Address book not found: {addressBook_name}")
+        return []
 
-            for contact in contacts:
-                if (search_option == 1 and contact.city.lower() == search_value.lower()) or \
-                   (search_option == 2 and contact.state.lower() == search_value.lower()):
-                    person[addressBook].append(contact)
-        
-        return person
-    
-    def get_countOf_Person_by_city_or_state(self, search_option, search_value):
-        
+    def search_person_by_city_or_state(self, search_option, search_value):
         """
-        Description:
-            Search the person in all contact's details in the address book..
-        Parameters:
-            search_option (int): Int value to search by city or state
-            search_value (str): The input value to search across all the addressbook  
-        Return Type:
-            countOf_contacts (int): Count of the contacts which all matches the input values
+        Searches for contacts across all address books by city or state.
         """
-        
-        countOf_countacts=0
-        
-        for addressBook, contacts in self.addressBooks.items():
+        log.info(f"Searching across all address books by {'city' if search_option == 1 else 'state'}: {search_value}")
+        results = {}
+        for book_name, address_book in self.addressBooks.items():
+            contacts = address_book.search_by_city_or_state(search_option, search_value)
+            if contacts:
+                results[book_name] = contacts
+        return results
 
-            for contact in contacts:
-                if (search_option == 1 and contact.city.lower() == search_value.lower()) or \
-                   (search_option == 2 and contact.state.lower() == search_value.lower()):
-                    countOf_countacts+=1
-    
-        return countOf_countacts
-                 
+    def get_count_of_person_by_city_or_state(self, search_option, search_value):
+        """
+        Returns the count of contacts across all address books by city or state.
+        """
+        count = 0
+        log.info(f"Counting contacts by {'city' if search_option == 1 else 'state'}: {search_value}")
+        for address_book in self.addressBooks.values():
+            count += len(address_book.search_by_city_or_state(search_option, search_value))
+        return count
+
 def main():
-    
-    addressbook_obj=AddressBook()
+    manager = AddressBookManager()
 
-    print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
-    
     while True:
-        option = int(input("Enter :\n"+
-                           "       1. Add new AddressBook\n"+
-                           "       2. Add Contact\n"+
-                           "       3. Edit Contact\n"+
-                           "       4. Delete Contact\n"+
-                           "       5. Display all contacts in AddressBook\n"+
-                           "       6. Search person by city or state\n"+
-                           "       7. Get Count of contacts by 'City' or 'State'\n"                                     
-                           "       8. Exit\n"+
-                           "option: "))
-        
+        option = int(input("Choose an option:\n"
+                           "1. Create Address Book\n"
+                           "2. Add Contact\n"
+                           "3. Edit Contact\n"
+                           "4. Delete Contact\n"
+                           "5. Display Contacts\n"
+                           "6. Search by City or State\n"
+                           "7. Count by City or State\n"
+                           "8. Exit\nOption: "))
+
         if option == 1:
-            
-            addressbook_name=input("Enter the name of the new address book: ")
-            print("-"*50+"\n"+addressbook_obj.create_Address_Book(addressbook_name)+"\n"+"-"*50)
-            
+            addressBook_name = input("Enter address book name: ")
+            print(manager.create_address_book(addressBook_name))
+
         elif option == 2:
-            
-            print(addressbook_obj.display_all_addressBooks())
+            print(manager.display_all_address_books())
+            addressBook_name = input("Enter address book name: ")
+            contact_data = [input(f"Enter {field}: ") for field in
+                            ["First Name", "Last Name", "Address", "City", "State", "Zip", "Phone", "Email"]]
+            contact = Contact(*contact_data)
+            print(manager.add_contact_to_address_book(addressBook_name, contact))
 
-            addressbook_name=input("Enter the 'AddressBook' name from above list to add contact: ")
-    
-            user_data=[
-                "Enter your First Name: ",
-                "Enter your Last Name: ",
-                "Enter your Address: ",
-                "Enter your City: ",
-                "Enter your State: ",
-                "Enter the Zip code: ",
-                "Enter your phone number: ",
-                "Enter your valid email: "
-                ]
-
-            user_data=[input(user_input) for user_input in user_data]
-
-            print("-"*50+"\n"+addressbook_obj.add_Contact(addressbook_name,Contact(*user_data))+"\n"+"-"*50)
-        
         elif option == 3:
-            
-            print(addressbook_obj.display_all_addressBooks())
-            
-            addressbook_name=input("Enter the AddressBook name from the above list to edit contact: ")
+            print(manager.display_all_address_books())
+            addressBook_name = input("Enter address book name: ")
+            firstName = input("Enter the first name of the contact to edit: ")
+            new_values = [input(f"Enter new {field} (leave empty to skip): ") for field in
+                          ["Last Name", "Address", "City", "State", "Zip", "Phone", "Email"]]
+            print(manager.edit_contact_in_address_book(addressBook_name, firstName, new_values))
 
-            userName=input("Enter your 'First name to edit contact': ")
-                
-            print("Leave the field empty if you don't want to update it.")
-            prompts = [
-                "Enter new Last Name: ",
-                "Enter new Address: ",
-                "Enter new City: ",
-                "Enter new State: ",
-                "Enter new Zip code: ",
-                "Enter new Phone Number: ",
-                "Enter new Email: "
-            ]
-
-            new_values = [input(prompt) for prompt in prompts]
-
-            print("-"*50+"\n"+addressbook_obj.edit_contact(addressbook_name,userName,new_values)+"\n"+"-"*50)
-            
         elif option == 4:
-            
-            print(addressbook_obj.display_all_addressBooks())
-            
-            addressbook_name=input("Enter one of the AddressBook(s) from above list to delete contact: ")
-            
-            firstName=input("Enter the contact firstName to delete: ")    
-            print("-"*50+"\n"+addressbook_obj.delete_contact(addressbook_name,firstName)+"\n"+"-"*50)
-        
+            print(manager.display_all_address_books())
+            addressBook_name = input("Enter address book name: ")
+            firstName = input("Enter the first name of the contact to delete: ")
+            print(manager.delete_contact_in_address_book(addressBook_name, firstName))
+
         elif option == 5:
-            print(addressbook_obj.display_all_addressBooks())
-
-            addressbook_name = input("Enter one of the AddressBook(s) from the above list to find all contacts: ")
-
-            if addressbook_obj.addressBooks[addressbook_name]:
-                contacts = addressbook_obj.display_all_contacts(addressbook_name)
-
+            print(manager.display_all_address_books())
+            addressBook_name = input("Enter address book name: ")
+            contacts = manager.display_contacts_in_address_book(addressBook_name)
+            if contacts:
                 for contact in contacts:
-                    print("-"*50+"\n"+f'''First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}\n'''+"-"*50)
+                    print(f"{contact.firstName} {contact.lastName}: {contact.address}, {contact.city}, {contact.state}, {contact.zip}, {contact.phone}, {contact.email}")
+            else:
+                print("No contacts found.")
 
-            else:
-                print("-" * 50+"\n"+f'"{addressbook_name}" AddressBook is empty, please add contacts first.'+"\n"+"-" * 50)
-        
         elif option == 6:
-            search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
-            search_value = input("Enter the value to search: ")
-            results = addressbook_obj.search_Person_by_city_or_state(search_option, search_value)
-            
+            search_option = int(input("Search by 1. City 2. State: "))
+            search_value = input("Enter the value: ")
+            results = manager.search_person_by_city_or_state(search_option, search_value)
             if results:
-                
-                for addressBook, contacts in results.items():
-                    
-                    if contacts:
-                        print("-"*50)
-                        print(f"Address Book: {addressBook}")
-                        for contact in contacts:
-                            print(f"First Name: {contact.firstName}")
-                            print(f"Last Name: {contact.lastName}")
-                            print(f"City: {contact.city}")
-                            print(f"State: {contact.state}")
-                            print(f"Phone: {contact.phone}")
-                            print(f"Email: {contact.email}")
-                            print("-"*50)
-                    else:
-                        print(f"No matching contacts found in {addressBook}.")
+                for book_name, contacts in results.items():
+                    print(f"Address Book: {book_name}")
+                    for contact in contacts:
+                        print(f"{contact.firstName} {contact.lastName}: {contact.address}, {contact.city}, {contact.state}, {contact.zip}, {contact.phone}, {contact.email}")
             else:
-                print(f"No matching contacts found in {search_value}.")
-        
+                print("No contacts found.")
+
         elif option == 7:
-            
-            search_option = int(input("Enter 1 to search by 'City'\nEnter 2 to search by 'State'\nOption: "))
-            search_value = input("Enter the value to search: ")
-            
-            print("-"*30+"\n"+f"{addressbook_obj.get_countOf_Person_by_city_or_state(search_option, search_value)} contact(s) found"+"\n"+"-"*30)
-                    
+            search_option = int(input("Count by 1. City 2. State: "))
+            search_value = input("Enter the value: ")
+            count = manager.get_count_of_person_by_city_or_state(search_option, search_value)
+            print(f"Total count of persons: {count}")
+
         elif option == 8:
-            print("Program exited!!!")
-            return    
-    
-if __name__=="__main__":
+            print("Exiting the program.")
+            break
+
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
     main()
