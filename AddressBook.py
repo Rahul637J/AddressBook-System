@@ -1,4 +1,4 @@
-''' 
+'''
 @Author: Rahul
 @Date: 2024-09-02
 @Last Modified by: Rahul
@@ -14,7 +14,7 @@ log = logger_init("UC_7")
 class Contact:
     
     def __init__(self, firstName, lastName, address, city, state, zip, phone, email):
-        # Contact validation on initialization
+        
         if not re.match(r"^[0-9]{6}$", zip):
             raise ValueError("Invalid ZIP code. It should be exactly 6 digits.")
         if not re.match(r"^[0-9]{10}$", phone):
@@ -50,13 +50,35 @@ class AddressBook:
     def edit_contact(self, firstName, new_values):
         for contact in self.contacts:
             if firstName == contact.firstName:
+
+                if new_values[0] and not re.match(r"^[a-zA-Z]+$", new_values[0]):
+                    raise ValueError("New last name must contain only alphabets.")
                 contact.lastName = new_values[0] or contact.lastName
+                
+                if new_values[1] and not re.match(r"^[a-zA-Z\s]+$", new_values[1]):
+                    raise ValueError("New address must contain only alphabets and spaces.")
                 contact.address = new_values[1] or contact.address
+                
+                if new_values[2] and not re.match(r"^[a-zA-Z\s]+$", new_values[2]):
+                    raise ValueError("New city must contain only alphabets and spaces.")
                 contact.city = new_values[2] or contact.city
+                
+                if new_values[3] and not re.match(r"^[a-zA-Z\s]+$", new_values[3]):
+                    raise ValueError("New state must contain only alphabets and spaces.")
                 contact.state = new_values[3] or contact.state
+                
+                if new_values[4] and not re.match(r"^[0-9]{6}$", new_values[4]):
+                    raise ValueError("New ZIP code must be exactly 6 digits.")
                 contact.zip = new_values[4] or contact.zip
+                
+                if new_values[5] and not re.match(r"^[0-9]{10}$", new_values[5]):
+                    raise ValueError("New phone number must be exactly 10 digits.")
                 contact.phone = new_values[5] or contact.phone
+                
+                if new_values[6] and not re.match(r'^[a-zA-Z0-9]+(?:[._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}(?:\.[a-zA-Z]{2,3})?$', new_values[6]):
+                    raise ValueError("New email address format is invalid.")
                 contact.email = new_values[6] or contact.email
+                
                 log.info("Contact edited successfully.")
                 return f"{contact.firstName}'s information has been updated."
         
@@ -83,6 +105,8 @@ class AddressBookManager:
         self.addressBooks = {}
     
     def create_address_book(self, name):
+        if not re.match(r"^[a-zA-Z0-9\s]+$", name):
+            raise ValueError("Address book name can only contain alphabets, numbers, and spaces.")
         if name not in self.addressBooks:
             self.addressBooks[name] = AddressBook()
             log.info("Address book created.")
@@ -140,11 +164,23 @@ def main():
         
         if option == 1:
             name = input("Enter the name of the new address book: ")
-            print("-" * 50 + "\n" + manager.create_address_book(name) + "\n" + "-" * 50)
+            try:
+                print("-" * 50 + "\n" + manager.create_address_book(name) + "\n" + "-" * 50)
+            except ValueError as e:
+                print(f"Error: {e}")
         
         elif option == 2:
             book_name = input("Enter the Address Book name: ")
-            contact_info = [input(f"Enter {field}: ") for field in ["First Name", "Last Name", "Address", "City", "State", "Zip", "Phone", "Email"]]
+            contact_info = [input(f"Enter {field}: ") for field in [[
+                "Enter your First Name (eg:'Rahul'): ",
+                "Enter your Last Name (eg: J): ",
+                "Enter your Address (eg: '176A Teachers colony' ): ",
+                "Enter your City (eg: 'Erode'): ",
+                "Enter your State (eg: 'Tamil Nadu') ",
+                "Enter the Zip code (enter 6 digits): ",
+                "Enter your phone number (enter 10 digits): ",
+                "Enter your valid email (eg : 'abc123@gmail.com): "
+            ]]]
             try:
                 contact = Contact(*contact_info)
                 print("-" * 50 + "\n" + manager.add_contact_to_book(book_name, contact) + "\n" + "-" * 50)
@@ -156,7 +192,10 @@ def main():
             firstName = input("Enter the First Name of the contact to edit: ")
             print("Leave the field blank if you don't want to update it.")
             new_values = [input(f"New {field}: ") for field in ["Last Name", "Address", "City", "State", "Zip", "Phone", "Email"]]
-            print("-" * 50 + "\n" + manager.edit_contact_in_book(book_name, firstName, new_values) + "\n" + "-" * 50)
+            try:
+                print("-" * 50 + "\n" + manager.edit_contact_in_book(book_name, firstName, new_values) + "\n" + "-" * 50)
+            except ValueError as e:
+                print(f"Error: {e}")
         
         elif option == 4:
             book_name = input("Enter the Address Book name: ")
