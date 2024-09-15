@@ -288,8 +288,8 @@ class AddressBook:
         return f"{len(all_contacts)} contacts loaded from {filename}"
 
 def main():
+    
     address_book_manager = AddressBook()
-    # Add logic for interacting with the user, for example:
     while True:
         print("1. Create Address Book")
         print("2. Add Contact")
@@ -379,6 +379,7 @@ def main():
         
         elif choice == 11:
             filename = input("Enter JSON file name to load from: ")
+            
             print(address_book_manager.load_from_json(filename))
         
         elif choice == 12:
