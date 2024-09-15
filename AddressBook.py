@@ -11,17 +11,14 @@ class Contact:
         self.city = city
         self.state = state
         
-        # Validating zip code (should be exactly 6 digits)
         if not re.fullmatch(r'\d{6}', zip):
             raise ValueError("Zip code must be exactly 6 digits!")
         self.zip = zip
         
-        # Validating phone number (should be exactly 10 digits)
         if not re.fullmatch(r'\d{10}', phone):
             raise ValueError("Phone number must be exactly 10 digits!")
         self.phone = phone
         
-        # Validating email with provided regex pattern
         email_pattern = r'^[a-zA-Z0-9]+(?:[._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9-]+\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2,3})?$'
         if not re.fullmatch(email_pattern, email):
             raise ValueError("Invalid email format!")
@@ -33,7 +30,7 @@ class AddressBook:
         self.contacts = []
         
     def add_contact(self, contact):
-        log.info("Contact added to addressbook")
+        log.info("Contact added to address book")
         self.contacts.append(contact)
         
     def edit_contact(self, firstName, new_values):
@@ -44,7 +41,6 @@ class AddressBook:
                 contact.city = new_values[2] or contact.city
                 contact.state = new_values[3] or contact.state
                 
-                # Validate new values if provided
                 if new_values[4]:
                     if not re.fullmatch(r'\d{6}', new_values[4]):
                         raise ValueError("Zip code must be exactly 6 digits!")
@@ -128,14 +124,14 @@ def main():
 
             try:
                 user_data = [
-                    input("Enter your First Name: "),
-                    input("Enter your Last Name: "),
-                    input("Enter your Address: "),
-                    input("Enter your City: "),
-                    input("Enter your State: "),
-                    input("Enter the Zip code: "),
-                    input("Enter your phone number: "),
-                    input("Enter your valid email: ")
+                    "Enter your First Name (eg:'Rahul'): ",
+                    "Enter your Last Name (eg: J): ",
+                    "Enter your Address (eg: '176A Teachers colony' ): ",
+                    "Enter your City (eg: 'Erode'): ",
+                    "Enter your State (eg: 'Tamil Nadu') ",
+                    "Enter the Zip code (enter 6 digits): ",
+                    "Enter your phone number (enter 10 digits): ",
+                    "Enter your valid email (eg : 'abc123@gmail.com): "
                 ]
 
                 contact = Contact(*user_data)
@@ -190,7 +186,8 @@ def main():
                 print(f"'{addressBook_name}' AddressBook not found!!!")
                 continue
 
-            for contact in addressBook.display_contacts():
+            contacts = addressBook.display_contacts()
+            for contact in contacts:
                 print("-" * 50)
                 print(f"First Name: {contact.firstName}\nLast Name: {contact.lastName}\nAddress: {contact.address}\nCity: {contact.city}\nState: {contact.state}\nZip: {contact.zip}\nPhone: {contact.phone}\nEmail: {contact.email}")
                 print("-" * 50)
