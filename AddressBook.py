@@ -7,11 +7,25 @@
 '''
 
 from Mylog import logger_init
+import re
 
 log = logger_init("UC_9")
 
 class Contact:
     def __init__(self, firstName, lastName, address, city, state, zip, phone, email):
+        # Validation for ZIP code
+        if not re.match(r"^\d{6}$", zip):
+            raise ValueError("Invalid ZIP code. It should be exactly 6 digits.")
+        
+        # Validation for Phone number
+        if not re.match(r"^\d{10}$", phone):
+            raise ValueError("Invalid phone number. It should be exactly 10 digits.")
+        
+        # Validation for Email
+        email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_regex, email):
+            raise ValueError("Invalid email address format.")
+
         self.firstName = firstName
         self.lastName = lastName
         self.address = address
@@ -60,6 +74,13 @@ class AddressBook:
         """
         for contact in self.contacts:
             if firstName == contact.firstName:
+                if new_values[4] and not re.match(r"^\d{6}$", new_values[4]):
+                    raise ValueError("New ZIP code must be exactly 6 digits.")
+                if new_values[5] and not re.match(r"^\d{10}$", new_values[5]):
+                    raise ValueError("New phone number must be exactly 10 digits.")
+                if new_values[6] and not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', new_values[6]):
+                    raise ValueError("New email address format is invalid.")
+                
                 contact.lastName = new_values[0] or contact.lastName
                 contact.address = new_values[1] or contact.address
                 contact.city = new_values[2] or contact.city
@@ -168,17 +189,21 @@ def main():
             addressbook_name = input("Enter the 'AddressBook' name from the above list to add contact: ")
 
             user_data = [
-                "Enter your First Name: ",
-                "Enter your Last Name: ",
-                "Enter your Address: ",
-                "Enter your City: ",
-                "Enter your State: ",
-                "Enter the Zip code: ",
-                "Enter your phone number: ",
-                "Enter your valid email: "
+                "Enter your First Name (eg:'Rahul'): ",
+                "Enter your Last Name (eg: J): ",
+                "Enter your Address (eg: '176A Teachers colony' ): ",
+                "Enter your City (eg: 'Erode'): ",
+                "Enter your State (eg: 'Tamil Nadu') ",
+                "Enter the Zip code (enter 6 digits): ",
+                "Enter your phone number (enter 10 digits): ",
+                "Enter your valid email (eg : 'abc123@gmail.com): "
             ]
             user_data = [input(user_input) for user_input in user_data]
-            print("-" * 50 + "\n" + addressbook_manager.addressBooks[addressbook_name].add_Contact(Contact(*user_data)) + "\n" + "-" * 50)
+            try:
+                contact = Contact(*user_data)
+                print("-" * 50 + "\n" + addressbook_manager.addressBooks[addressbook_name].add_Contact(contact) + "\n" + "-" * 50)
+            except ValueError as e:
+                print(f"Error: {e}")
         
         elif option == 3:
             print(addressbook_manager.display_all_addressBooks())
@@ -196,7 +221,10 @@ def main():
                 "Enter new Email: "
             ]
             new_values = [input(prompt) for prompt in prompts]
-            print("-" * 50 + "\n" + addressbook_manager.addressBooks[addressbook_name].edit_Contact(userName, new_values) + "\n" + "-" * 50)
+            try:
+                print("-" * 50 + "\n" + addressbook_manager.addressBooks[addressbook_name].edit_Contact(userName, new_values) + "\n" + "-" * 50)
+            except ValueError as e:
+                print(f"Error: {e}")
         
         elif option == 4:
             print(addressbook_manager.display_all_addressBooks())
