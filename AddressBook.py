@@ -12,9 +12,7 @@ import re
 log = logger_init("UC_9")
 
 class Contact:
-    
     def __init__(self, firstName, lastName, address, city, state, zip, phone, email):
-        
         """
         Description:
             Initializes a Contact object with the provided details and validates them.
@@ -29,7 +27,6 @@ class Contact:
             phone (str): The contact's phone number.
             email (str): The contact's email address.
         """
-        
         if not re.match(r"^\d{6}$", zip):
             raise ValueError("Invalid ZIP code. It should be exactly 6 digits.")
         
@@ -164,6 +161,25 @@ class AddressBook:
                 results.append(contact)
         return results
 
+    def count_by_city_or_state(self, search_option, search_value):
+        """
+        Description:
+            Counts the number of contacts in the address book based on city or state.
+
+        Parameters:
+            search_option (int): Search by city (1) or state (2).
+            search_value (str): The value to search for (city or state).
+
+        Return Type:
+            int: The count of matching contacts.
+        """
+        count = 0
+        for contact in self.contacts:
+            if (search_option == 1 and contact.city.lower() == search_value.lower()) or \
+               (search_option == 2 and contact.state.lower() == search_value.lower()):
+                count += 1
+        return count
+
 
 class AddressBookManager:
     def __init__(self):
@@ -200,7 +216,8 @@ def main():
                            "       4. Delete Contact\n" +
                            "       5. Display all contacts in AddressBook\n" +
                            "       6. Search person by city or state\n" +
-                           "       7. Exit\n" +
+                           "       7. Count contacts by city or state\n" +
+                           "       8. Exit\n" +
                            "option: "))
         
         if option == 1:
@@ -275,6 +292,15 @@ def main():
                         print("-" * 50 + "\n" + f"First Name: {contact.firstName}, Last Name: {contact.lastName}, City: {contact.city}, State: {contact.state}\n" + "-" * 50)
         
         elif option == 7:
+            print("Count by:\n       1. City\n       2. State")
+            count_option = int(input("Option: "))
+            count_value = input("Enter the city or state to count: ")
+            
+            for addressBook_name, addressBook in addressbook_manager.addressBooks.items():
+                count = addressBook.count_by_city_or_state(count_option, count_value)
+                print(f"-" * 50 + "\n" + f"Number of contacts in {addressBook_name} for {('city' if count_option == 1 else 'state')}: {count}\n" + "-" * 50)
+        
+        elif option == 8:
             print("-" * 50 + "\n" + "Thanks for using the Address Book application!" + "\n" + "-" * 50)
             break
 
