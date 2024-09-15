@@ -1,4 +1,4 @@
-''' 
+'''
 @Author: Rahul 
 @Date: 2024-09-14
 @Last Modified by: Rahul 
@@ -7,11 +7,21 @@
 '''
 
 from Mylog import logger_init
+import re
 
 log = logger_init("UC_8")
 
 class Contact:
     def __init__(self, firstName, lastName, address, city, state, zip, phone, email):
+        
+        if not re.match(r"^[0-9]{6}$", zip):
+            raise ValueError("Invalid ZIP code. It should be exactly 6 digits.")
+        if not re.match(r"^[0-9]{10}$", phone):
+            raise ValueError("Invalid phone number. It should be exactly 10 digits.")
+        email_regex = r'^[a-zA-Z0-9]+(?:[._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}(?:\.[a-zA-Z]{2,3})?$'
+        if not re.match(email_regex, email):
+            raise ValueError("Invalid email address format.")
+        
         self.firstName = firstName
         self.lastName = lastName
         self.address = address
@@ -37,6 +47,14 @@ class AddressBook:
     def edit_contact(self, firstName, new_values):
         for contact in self.contacts:
             if contact.firstName == firstName:
+                
+                if new_values[4] and not re.match(r"^[0-9]{6}$", new_values[4]):
+                    raise ValueError("New ZIP code must be exactly 6 digits.")
+                if new_values[5] and not re.match(r"^[0-9]{10}$", new_values[5]):
+                    raise ValueError("New phone number must be exactly 10 digits.")
+                if new_values[6] and not re.match(r'^[a-zA-Z0-9]+(?:[._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}(?:\.[a-zA-Z]{2,3})?$', new_values[6]):
+                    raise ValueError("New email address format is invalid.")
+                
                 contact.lastName = new_values[0] or contact.lastName
                 contact.address = new_values[1] or contact.address
                 contact.city = new_values[2] or contact.city
@@ -111,30 +129,36 @@ def main():
             addressBook_name = input("Enter the name of the new address book: ")
             print("-" * 50 + "\n" + manager.create_address_book(addressBook_name) + "\n" + "-" * 50)
 
-        if option == 2:
+        elif option == 2:
             print(manager.display_all_address_books())
             addressBook_name = input("Enter the Address Book name to add a contact: ")
 
             contact_data = [
-                "Enter First Name: ",
-                "Enter Last Name: ",
-                "Enter Address: ",
-                "Enter City: ",
-                "Enter State: ",
-                "Enter Zip Code: ",
-                "Enter Phone Number: ",
-                "Enter Email: "
+                "Enter your First Name (eg:'Rahul'): ",
+                "Enter your Last Name (eg: J): ",
+                "Enter your Address (eg: '176A Teachers colony' ): ",
+                "Enter your City (eg: 'Erode'): ",
+                "Enter your State (eg: 'Tamil Nadu') ",
+                "Enter the Zip code (enter 6 digits): ",
+                "Enter your phone number (enter 10 digits): ",
+                "Enter your valid email (eg : 'abc123@gmail.com): "
             ]
 
             user_data = [input(prompt) for prompt in contact_data]
-            contact = Contact(*user_data)
-            addressBook = manager.get_address_book(addressBook_name)
-            if addressBook:
-                print("-" * 50 + "\n" + addressBook.add_contact(contact) + "\n" + "-" * 50)
-            else:
-                print("Address Book not found.")
+            
+            try:
+                contact = Contact(*user_data)
+                addressBook = manager.get_address_book(addressBook_name)
+                
+                if addressBook:
+                    print("-" * 50 + "\n" + addressBook.add_contact(contact) + "\n" + "-" * 50)
+                    
+                else:
+                    print("Address Book not found.")
+            except ValueError as e:
+                print(f"Error: {e}")
 
-        if option == 3:
+        elif option == 3:
             print(manager.display_all_address_books())
             addressBook_name = input("Enter the Address Book name to edit a contact: ")
             firstName = input("Enter the first name of the contact to edit: ")
@@ -152,11 +176,14 @@ def main():
 
             addressBook = manager.get_address_book(addressBook_name)
             if addressBook:
-                print("-" * 50 + "\n" + addressBook.edit_contact(firstName, new_values) + "\n" + "-" * 50)
+                try:
+                    print("-" * 50 + "\n" + addressBook.edit_contact(firstName, new_values) + "\n" + "-" * 50)
+                except ValueError as e:
+                    print(f"Error: {e}")
             else:
                 print("Address Book not found.")
 
-        if option == 4:
+        elif option == 4:
             print(manager.display_all_address_books())
             addressBook_name = input("Enter the Address Book name to delete a contact: ")
             firstName = input("Enter the first name of the contact to delete: ")
@@ -167,7 +194,7 @@ def main():
             else:
                 print("Address Book not found.")
 
-        if option == 5:
+        elif option == 5:
             print(manager.display_all_address_books())
             addressBook_name = input("Enter the Address Book name to display all contacts: ")
 
@@ -182,7 +209,7 @@ def main():
             else:
                 print("Address Book not found.")
 
-        if option == 6:
+        elif option == 6:
             search_option = int(input("Enter 1 to search by 'City', 2 to search by 'State': "))
             search_value = input("Enter the value to search: ")
             results = manager.search_person_by_city_or_state(search_option, search_value)
@@ -198,7 +225,7 @@ def main():
             else:
                 print("No matching contacts found.")
 
-        if option == 7:
+        elif option == 7:
             print("Program exited.")
             return
 
