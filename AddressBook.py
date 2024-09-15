@@ -119,69 +119,8 @@ class AddressBook:
             
 def main():
     
-    addressbook_obj=AddressBook()
-
     print("-"*35+"\n| Welcome to Address Book Program |\n"+"-"*35+"\n")
     
-    while True:
-        option = int(input("Enter :\n"+
-                           "       1. Add Contact\n"+
-                           "       2. Edit Contact\n"+
-                           "       3. Delete Contact\n"+
-                           "       4. Display all contacts\n"+                                     
-                           "       5. Exit\n"+
-                           "option: "))
-        
-        if option == 1:
-            
-            user_data=[
-                "Enter your First Name: ",
-                "Enter your Last Name: ",
-                "Enter your Address: ",
-                "Enter your City: ",
-                "Enter your State: ",
-                "Enter the Zip code: ",
-                "Enter your phone number: ",
-                "Enter your valid email: "
-                ]
-
-            user_data=[input(user_input) for user_input in user_data]
-            
-            addressbook_obj.add_Contact(Contact(*user_data))
-        
-        if option == 2:
-            
-            userName=input("Enter your 'First name to edit contact': ")
-            
-            print("Leave the field empty if you don't want to update it.")
-            prompts = [
-                "Enter new Last Name: ",
-                "Enter new Address: ",
-                "Enter new City: ",
-                "Enter new State: ",
-                "Enter new Zip code: ",
-                "Enter new Phone Number: ",
-                "Enter new Email: "
-            ]
-
-            new_values = [input(prompt) for prompt in prompts]
-
-            print(addressbook_obj.edit_contact(userName,new_values))
-            
-        if option == 3:
-            
-            firstName=input("Enter the contact firstName to delete: ")    
-            
-            print(addressbook_obj.delete_contact(firstName))
-        
-        if option == 4:
-            
-            firstName,lastName,address,city,state,zip,phone,email=addressbook_obj.display_all_contacts()
-            print("-"*50+"\n"+f"First Name: {firstName}\nLast Name: {lastName}\nAddress: {address}\nCity: {city}\nState: {state}\nZip: {zip}\nPhone: {phone}\nEmail: {email}\n"+"-"*50)
-               
-        if option == 5:
-            print("Program exited!!!")
-            return    
     
 if __name__=="__main__":
     main()
